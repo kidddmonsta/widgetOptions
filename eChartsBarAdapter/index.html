@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- including ECharts file -->
+    <script src="jquery.min.js"></script>
+    <script src="moment.js"></script>
+    <script src="dataTool.min.js"></script>
+    <script src="echarts.js"></script>
+    <script src="eChartsBarAdapter.js"></script>
+    <script src='ecStat.js'></script>
+    <script src='widgetOptions.js'></script>
+    <link rel="stylesheet" href="css/style.css"/>
+    <!-- <script src="eChartsBarAdapter.js"></script>-->
+</head>
+<body>
+<!-- prepare a DOM container with width and height -->
+<div id="main"></div>
+<script type="text/javascript">
+    // based on prepared DOM, initialize echarts instance
+    var chart = echarts.init(document.getElementById('main'));
+    chart.showLoading();
+    formatData('example.json').then(function (formattedData) {
+        chart.hideLoading();
+        let option = {
+            color: settings.barColors,
+            title: {
+                show: settings.titleShow,
+                text: settings.titleText,
+                textStyle: {
+                    color: settings.titleTextStyleColor,
+                    fontStyle: settings.titleTextStyleFontStyle,
+                    fontWeight: settings.titleTextStyleFontWeight,
+                    fontFamily: settings.titleTextStyleFontFamily,
+                    fontSize: settings.titleTextStyleFontSize
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                show: settings.legendShow,
+                itemGap: settings.legendTitleGap,
+                data: formattedData.legendDataNames,
+                textStyle: {
+                    color: settings.legendTextStyleColor,
+                    fontStyle: settings.legendTextStyleFontStyle,
+                    fontWeight: settings.legendTextStyleFontWight,
+                    fontFamily: settings.legendTextStyleFontFamily,
+                    fontSize: settings.legendTextStyleFontSize
+                }
+            },
+            grid: {
+                left: settings.gridLeft,
+                right: settings.gridRight,
+                bottom: settings.gridBottom,
+                containLabel: settings.gridContainLabel
+            },
+            xAxis: {
+                show: settings.xAxisShow,
+                type: 'value',
+                name: settings.xAxisName,
+                nameTextStyle: {
+                    color: settings.xAxisNameTextStyleColor,
+                    fontStyle: settings.xAxisNameTextStyleFontStyle,
+                    fontWeight: settings.xAxisNameTextStyleFontWeight,
+                    fontFamily: settings.xAxisNameTextStyleFontFamily,
+                    fontSize: settings.xAxisNameTextStyleFontSize,
+                    align: settings.xAxisNameTextStyleAlign
+                },
+                axisLine: {
+                    lineStyle: {
+                        type: settings.xAxisLineStyleType,
+                        color: settings.xAxisLineStyleColor
+                    }
+                }
+            },
+            yAxis: {
+                show: settings.yAxisShow,
+                type: 'category',
+                name: settings.yAxisName,
+                data: formattedData.yAxis,
+                nameTextStyle: {
+                    color: settings.yAxisNameTextStyleColor,
+                    fontStyle: settings.yAxisNameTextStyleFontStyle,
+                    fontWeight: settings.yAxisNameTextStyleFontWeight,
+                    fontFamily: settings.yAxisNameTextStyleFontFamily,
+                    fontSize: settings.yAxisNameTextStyleFontSize,
+                    align: settings.yAxisNameTextStyleAlign
+                },
+                axisLine: {
+                    lineStyle: {
+                        type: settings.yAxisLineStyleType,
+                        color: settings.yAxisLineStyleColor
+                    }
+                }
+            },
+            dataZoom: [
+                {
+                    show: true,
+                    start: 0,
+                    end: 100
+                },
+                {
+                    type: 'inside',
+                    start: 0,
+                    end: 100
+                },
+                {
+                    show: true,
+                    yAxisIndex: 0,
+                    filterMode: 'empty',
+                    width: 30,
+                    height: '80%',
+                    showDataShadow: false,
+                    left: '93%'
+                }
+            ],
+            series: formattedData.series
+        };
+
+        chart.setOption(option);
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- including ECharts file -->
+    <script src="jquery.min.js"></script>
+    <script src="moment.js"></script>
+    <script src="dataTool.min.js"></script>
+    <script src="echarts.js"></script>
+    <script src="echartsAdapter.js"></script>
+    <script src='ecStat.js'></script>
+    <script src='widgetOptions.js'></script>
+    <link rel="stylesheet" href="css/style.css"/>
+    <!-- <script src="echartsAdapter.js"></script>-->
+</head>
+<body>
+<!-- prepare a DOM container with width and height -->
+<div id="main"></div>
+<script type="text/javascript">
+    // based on prepared DOM, initialize echarts instance
+    var chart = echarts.init(document.getElementById('main'));
+    chart.showLoading();
+    formatData('example.json').then(function (formattedData) {
+        chart.hideLoading();
+        let option = {
+            color: settings.lineColors,
+            title: {
+                show: settings.titleShow,
+                text: settings.titleText,
+                textStyle: {
+                    color: settings.titleTextStyleColor,
+                    fontStyle: settings.titleTextStyleFontStyle,
+                    fontWeight: settings.titleTextStyleFontWeight,
+                    fontFamily: settings.titleTextStyleFontFamily,
+                    fontSize: settings.titleTextStyleFontSize
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                    label: {
+                        show: true
+                    }
+                }
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            legend: {
+                show: settings.legendShow,
+                itemGap: settings.legendTitleGap,
+                data: formattedData.legendDataNames,
+                textStyle: {
+                    color: settings.legendTextStyleColor,
+                    fontStyle: settings.legendTextStyleFontStyle,
+                    fontWeight: settings.legendTextStyleFontWight,
+                    fontFamily: settings.legendTextStyleFontFamily,
+                    fontSize: settings.legendTextStyleFontSize
+                }
+            },
+            grid: {
+                top: settings.gridTop,
+                left: settings.gridLeft,
+                right: settings.gridRight,
+                containLabel: settings.gridContainLabel
+            },
+            xAxis: [
+                {
+                    show: settings.xAxisShow,
+                    type: 'category',
+                    name: settings.xAxisName,
+                    data: formattedData.xAxis,
+                    nameTextStyle: {
+                        color: settings.xAxisNameTextStyleColor,
+                        fontStyle: settings.xAxisNameTextStyleFontStyle,
+                        fontWeight: settings.xAxisNameTextStyleFontWeight,
+                        fontFamily: settings.xAxisNameTextStyleFontFamily,
+                        fontSize: settings.xAxisNameTextStyleFontSize,
+                        align: settings.xAxisNameTextStyleAlign
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            type: settings.xAxisLineStyleType,
+                            color: settings.xAxisLineStyleColor
+                        }
+                    }
+                }
+                /*{
+                    type: 'category',
+                    data: formattedData.xAxis,
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLine: {
+                        onZero: false,
+                        lineStyle: {
+                            color: 'blue'
+                        }
+                    }
+                }*/
+            ],
+            yAxis: [
+                {
+                    show: settings.yAxisShow,
+                    type: 'value',
+                    name: settings.yAxisName,
+                    nameTextStyle: {
+                        color: settings.yAxisNameTextStyleColor,
+                        fontStyle: settings.yAxisNameTextStyleFontStyle,
+                        fontWeight: settings.yAxisNameTextStyleFontWeight,
+                        fontFamily: settings.yAxisNameTextStyleFontFamily,
+                        fontSize: settings.yAxisNameTextStyleFontSize,
+                        align: settings.yAxisNameTextStyleAlign
+                    },
+                    axisLabel: {
+                        //align: 'center',
+                        formatter: function (a) {
+                            a = +a;
+                            return isFinite(a)
+                                ? echarts.format.addCommas(+a)
+                                : '';
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            type: settings.yAxisLineStyleType,
+                            color: settings.yAxisLineStyleColor
+                        }
+                    }
+                },
+                /*{
+                    type: 'value',
+                    name: 'Ось У2',
+                    min: 0,
+                    max: 1800,
+                    position: 'right',
+                    axisLine: {
+                        lineStyle: {
+                            color: 'orange'
+                        }
+                    },
+                    axisLabel: {
+                        formatter: '{value} заявок'
+                    }
+                }*/
+            ],
+            dataZoom: [
+                {
+                    show: true,
+                    start: 0,
+                    end: 100
+                },
+                {
+                    type: 'inside',
+                    start: 0,
+                    end: 100
+                },
+                {
+                    show: true,
+                    yAxisIndex: 0,
+                    filterMode: 'empty',
+                    width: 30,
+                    height: '80%',
+                    showDataShadow: false,
+                    left: '93%'
+                }
+            ],
+            series: formattedData.series
+        };
+
+        chart.setOption(option);
+    });
+
+</script>
+</body>
+</html>
